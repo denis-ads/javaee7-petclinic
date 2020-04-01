@@ -13,7 +13,9 @@ public interface PetDao {
 
     void addNew(Pet pet);
 
-    Pet findById(long petId);
+//    Pet findById(long petId);
 
     void update(Pet pet);
+
+	Pet findByIdNamedQuery(Long id);
 }

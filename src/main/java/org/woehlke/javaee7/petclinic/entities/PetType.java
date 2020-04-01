@@ -16,7 +16,9 @@ import javax.persistence.*;
 public class PetType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "PetType_SEQ", sequenceName = "PetType_ID_SEQ", allocationSize = 1, initialValue = 7)
+    @GeneratedValue(generator = "PetType_SEQ", strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotEmpty

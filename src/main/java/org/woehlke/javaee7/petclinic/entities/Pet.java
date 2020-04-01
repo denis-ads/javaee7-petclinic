@@ -1,11 +1,32 @@
 package org.woehlke.javaee7.petclinic.entities;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.search.annotations.Field;
 import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,10 +37,15 @@ import java.util.*;
  */
 @Entity
 @Table(name = "pets")
+@NamedQueries({ 
+    @NamedQuery(name = "pets.findByIdOwner", query = "SELECT e FROM Pet e left join fetch e.owner p left join fetch e.visits v  WHERE e.id = :id")
+})
 public class Pet implements Comparable<Pet> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "PET_SEQ", sequenceName = "PET_ID_SEQ", allocationSize = 1, initialValue = 14)
+    @GeneratedValue(generator = "PET_SEQ", strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotEmpty
@@ -38,11 +64,11 @@ public class Pet implements Comparable<Pet> {
     private PetType type;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private Owner owner;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pet", fetch = FetchType.LAZY)
     private Set<Visit> visits = new HashSet<Visit>();
 
     public void addVisit(Visit visit) {

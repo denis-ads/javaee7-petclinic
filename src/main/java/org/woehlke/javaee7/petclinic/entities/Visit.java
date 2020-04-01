@@ -1,10 +1,22 @@
 package org.woehlke.javaee7.petclinic.entities;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +30,9 @@ import java.util.Date;
 public class Visit implements Comparable<Visit> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "Visit_SEQ", sequenceName = "Visit_ID_SEQ", allocationSize = 1, initialValue = 5)
+    @GeneratedValue(generator = "Visit_SEQ", strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -30,7 +44,7 @@ public class Visit implements Comparable<Visit> {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id")
     private Pet pet;
 

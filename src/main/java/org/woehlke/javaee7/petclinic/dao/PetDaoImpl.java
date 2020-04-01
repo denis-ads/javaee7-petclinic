@@ -1,10 +1,13 @@
 package org.woehlke.javaee7.petclinic.dao;
 
+import org.woehlke.javaee7.petclinic.entities.Owner;
 import org.woehlke.javaee7.petclinic.entities.Pet;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import java.util.logging.Logger;
 
 /**
@@ -29,11 +32,20 @@ public class PetDaoImpl implements PetDao {
         entityManager.persist(pet);
     }
 
-    @Override
-    public Pet findById(long petId) {
-        return entityManager.find(Pet.class, petId);
-    }
+//    @Override
+//    public Pet findById(long petId) {
+//        return entityManager.find(Pet.class, petId);
+//    }
 
+    @Override
+    public Pet findByIdNamedQuery(Long id) {
+    	 final Query createNamedQuery = entityManager.createNamedQuery("pets.findByIdOwner");
+         createNamedQuery.setParameter("id", id);
+         final Pet pet = (Pet) createNamedQuery.getSingleResult();
+
+        return pet;
+    }
+    
     @Override
     public void update(Pet pet) {
         log.info("updatePet: "+pet.toString());

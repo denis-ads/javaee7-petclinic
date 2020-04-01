@@ -16,7 +16,9 @@ import javax.persistence.*;
 public class Specialty implements Comparable<Specialty> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "SPECIALTY_SEQ", sequenceName = "SPECIALTY_ID_SEQ", allocationSize = 1, initialValue = 4)
+    @GeneratedValue(generator = "SPECIALTY_SEQ", strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotEmpty

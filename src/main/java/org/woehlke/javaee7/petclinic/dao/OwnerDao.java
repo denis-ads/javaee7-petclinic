@@ -25,4 +25,6 @@ public interface OwnerDao {
 
     List<Owner> search(String searchterm);
 
+	Owner findByIdNamedQuery(Long id);
+
 }

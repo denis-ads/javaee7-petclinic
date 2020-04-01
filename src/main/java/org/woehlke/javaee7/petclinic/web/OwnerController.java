@@ -131,7 +131,8 @@ public class OwnerController implements Serializable {
     }
 
     public String showOwner(long id){
-        this.owner = ownerDao.findById(id);
+        this.owner = ownerDao.findByIdNamedQuery(id);
+        //this.owner.getPets();
         return "ownerShow.jsf";
     }
 
@@ -170,7 +171,7 @@ public class OwnerController implements Serializable {
     }
 
     public String editPetForm(long petId){
-        this.pet = petDao.findById(petId);
+        this.pet = petDao.findByIdNamedQuery(petId);
         this.petTypeId = this.pet.getType().getId();
         return "petEdit.jsf";
     }
@@ -180,12 +181,12 @@ public class OwnerController implements Serializable {
         this.pet.setType(petType);
         petDao.update(this.pet);
         long ownerId = this.owner.getId();
-        this.owner = this.ownerDao.findById(ownerId);
+        this.owner = this.ownerDao.findByIdNamedQuery(ownerId);
         return "ownerShow.jsf";
     }
 
     public String addVisitToPetForm(long petId){
-        this.pet = petDao.findById(petId);
+        this.pet = petDao.findByIdNamedQuery(petId);
         this.petTypeId = this.pet.getType().getId();
         this.visit = new Visit();
         return "petAddVisit.jsf";
@@ -197,7 +198,7 @@ public class OwnerController implements Serializable {
         ownerService.addNewVisit(this.visit);
         log.info("owner1: " + this.owner.toString());
         long ownerId = this.owner.getId();
-        this.owner = this.ownerDao.findById(ownerId);
+        this.owner = this.ownerDao.findByIdNamedQuery(ownerId);
         log.info("owner2: "+this.owner.toString());
         return "ownerShow.jsf";
     }

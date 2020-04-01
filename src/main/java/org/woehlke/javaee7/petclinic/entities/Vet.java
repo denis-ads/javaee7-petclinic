@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 import javax.xml.bind.annotation.XmlElement;
@@ -35,7 +36,9 @@ import java.util.*;
 public class Vet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "Vet_SEQ", sequenceName = "Vet_ID_SEQ", allocationSize = 1, initialValue = 7)
+    @GeneratedValue(generator = "Vet_SEQ", strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "first_name")

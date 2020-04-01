@@ -1,17 +1,18 @@
 package org.woehlke.javaee7.petclinic.dao;
 
 
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.query.dsl.QueryBuilder;
-import org.woehlke.javaee7.petclinic.entities.Owner;
+import java.util.List;
+import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import java.util.List;
-import java.util.logging.Logger;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.query.dsl.QueryBuilder;
+import org.woehlke.javaee7.petclinic.entities.Owner;
 
 /**
  * Created with IntelliJ IDEA.
@@ -52,6 +53,16 @@ public class OwnerDaoImpl implements OwnerDao {
         return entityManager.find(Owner.class, id);
     }
 
+    @Override
+    public Owner findByIdNamedQuery(Long id) {
+    	 final Query createNamedQuery = entityManager.createNamedQuery("Owner.findByIdPets");
+         createNamedQuery.setParameter("id", id);
+         final Owner owner = (Owner) createNamedQuery.getSingleResult();
+
+        return owner;
+    }
+
+    
     @Override
     public void update(Owner owner) {
         log.info("updateOwner: "+owner.toString());

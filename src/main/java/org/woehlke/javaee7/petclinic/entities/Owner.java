@@ -1,5 +1,25 @@
 package org.woehlke.javaee7.petclinic.entities;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Digits;
+
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -7,19 +27,6 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.validation.constraints.Digits;
-
-import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,10 +38,15 @@ import java.util.*;
 @Entity
 @Table(name = "owners")
 @Indexed
+@NamedQueries({ 
+    @NamedQuery(name = "Owner.findByIdPets", query = "SELECT e FROM Owner e left join fetch e.pets p left join fetch p.visits WHERE e.id = :id")
+})
 public class Owner {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "OWNER_SEQ", sequenceName = "OWNER_ID_SEQ", allocationSize = 1, initialValue = 11)
+    @GeneratedValue(generator = "OWNER_SEQ", strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "first_name")
@@ -63,7 +75,7 @@ public class Owner {
     private String telephone;
 
     @IndexedEmbedded
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner",fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner",fetch = FetchType.LAZY)
     private Set<Pet> pets = new TreeSet<Pet>();
 
     public void addPet(Pet pet){
